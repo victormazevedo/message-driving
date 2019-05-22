@@ -11,8 +11,18 @@ public class OrderListener {
 
     private static final Logger logger = LoggerFactory.getLogger(OrderListener.class);
 
-    @StreamListener(target = OrderSink.INPUT)
-    public void listenForOrder(Order order) {
-        logger.info(" received new order ["+order.toString()+"] ");
+    @StreamListener(target = OrderSink.INPUT, condition = "headers['payment_mode']=='cash'")
+    public void listenForCashOrder(Order order) {
+        logger.info(" received new CASH order {} ", order.toString());
+    }
+
+    @StreamListener(target = OrderSink.INPUT, condition = "headers['payment_mode']=='credit'")
+    public void listenForCreditOrder(Order order) {
+        logger.info(" received new CREDIT order {} ", order.toString());
+    }
+
+    @StreamListener(target = OrderSink.INPUT, condition = "headers['payment_mode']=='cheque'")
+    public void listenForChequeOrder(Order order) {
+        logger.info( "received new CHEQUE order {} ", order.toString());
     }
 }
